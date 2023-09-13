@@ -77,6 +77,9 @@
                                                         <integer key="value" value="15"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="noButtonClicked:" destination="BYZ-38-t0r" eventType="touchDown" id="iZS-rO-uXR"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hFo-OG-h9M">
                                                 <rect key="frame" x="197" y="0.0" width="177" height="60"/>
@@ -91,6 +94,9 @@
                                                         <integer key="value" value="15"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="yesButtonClicked:" destination="BYZ-38-t0r" eventType="touchDown" id="PLL-RT-GbJ"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <constraints>
@@ -110,6 +116,11 @@
                             <constraint firstItem="WJf-v0-mK0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="meP-51-XGE"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="counterLabel" destination="90R-G3-MI4" id="W70-fS-Ubd"/>
+                        <outlet property="imageViewLabel" destination="E98-Ge-s4f" id="14e-Bc-qeU"/>
+                        <outlet property="textLabel" destination="UUM-eS-LfT" id="e4L-lz-yRS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
