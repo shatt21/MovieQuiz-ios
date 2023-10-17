@@ -152,7 +152,7 @@ final class MovieQuizViewController: UIViewController {
                 title: "Этот раунд окончен!",
                 text: text,
                 buttonText: "Сыграть ещё раз")
-            show(quiz: viewModel)
+            showAlert(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
             let firstQuestion = question[currentQuestionIndex]
@@ -162,7 +162,7 @@ final class MovieQuizViewController: UIViewController {
         }
     }
     
-    private func show(quiz result: QuizResultsViewModel) {
+    private func showAlert(quiz result: QuizResultsViewModel) {
         let alert = UIAlertController(
             title: result.title,
             message: result.text,
