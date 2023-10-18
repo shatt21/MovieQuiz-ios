@@ -19,7 +19,7 @@ final class AlertPresenterImp {
     }
 }
 
-extension AlertPresenterImp: AlertPresenter {
+extension AlertPresenterImp : AlertPresenter {
         func show(alertModel: AlertModel){
             let alert = UIAlertController(title: alertModel.title,
                                           message: alertModel.message,
