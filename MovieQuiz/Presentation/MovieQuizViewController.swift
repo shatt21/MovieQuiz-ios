@@ -1,7 +1,7 @@
 import UIKit
 
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate{
+final class MovieQuizViewController: UIViewController {
     
     
     
@@ -47,20 +47,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        questionFactory?.requestNextQuestion()
-    }
-    
-    //MARK: - QuestionFactoryDelegate
-    
-    func didReceiveNextQuestion(question: QuizeQuestion?) {
-        guard let question = question else { return }
+        questionFactory = QuestionFactory(delegate: self)
         
-        currentQuestion = question
-        let viewModel = convert(question)
-        DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
-        }
+        questionFactory?.requestNextQuestion()
+        
+        alertPresenter = AlertPresenterImp(viewController: self)
     }
+    
+   
     // MARK: - Struct
     
     struct ViewModel {
@@ -122,18 +116,36 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate{
     }
     
     private func show(quiz result: QuizResultsViewModel) {
-        let alert = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText) { [weak self] in
+        
+        let alertModel = AlertModel(title: result.title,
+                                    message: result.text,
+                                    buttonText: result.buttonText,
+                                    buttonAction: { [weak self] in
             guard let self = self else { return }
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             self.questionFactory?.requestNextQuestion()
         }
+    )
         
-        alertPresenter?.show(result: alert)
+        alertPresenter?.show(alertModel: alertModel)
     }
     
 }
 
+extension MovieQuizViewController: QuestionFactoryDelegate {
+    //MARK: - QuestionFactoryDelegate
+    
+    func didReceiveNextQuestion(_ question: QuizeQuestion?) {
+        guard let question = question else { return }
+        
+        currentQuestion = question
+        let viewModel = convert(question)
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
+    }
+}
 
 
 

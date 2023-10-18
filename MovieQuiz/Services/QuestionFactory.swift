@@ -7,44 +7,54 @@
 
 import Foundation
 
-class QuestionFactory {
-    private let question: [QuizeQuestion] = [
-        QuizeQuestion(image: "The Godfather",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: true),
-        QuizeQuestion(image: "The Dark Knight",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: true),
-        QuizeQuestion(image: "Kill Bill",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: true),
-        QuizeQuestion(image: "The Avengers",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: true),
-        QuizeQuestion(image: "Deadpool",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: true),
-        QuizeQuestion(image: "The Green Knight",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: true),
-        QuizeQuestion(image: "Old",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: false),
-        QuizeQuestion(image: "The Ice Age Adventures of Buck Wild",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: false),
-        QuizeQuestion(image: "Tesla",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: false),
-        QuizeQuestion(image: "Vivarium",
-                      text: "Рейтинг этого фильма больше чем 6?",
-                      correctAnswer: false)
-    ]
+class QuestionFactory: QuestionFactoryProtocol {
+
+    private weak var delegate: QuestionFactoryDelegate?
     
-    func requestNextQuestion() -> QuizeQuestion? {
-        guard let index = (0..<question.count).randomElement() else {
-            return nil
+    init(delegate: QuestionFactoryDelegate?) {
+        self.delegate = delegate
+    }
+    
+    func requestNextQuestion() {
+        guard let question = question.randomElement() else {
+            assertionFailure("question is empty")
+            return
         }
-        return question[safe: index]
+        
+        delegate?.didReceiveNextQuestion(question)
     }
 }
+
+
+private let question: [QuizeQuestion] = [
+    QuizeQuestion(image: "The Godfather",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: true),
+    QuizeQuestion(image: "The Dark Knight",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: true),
+    QuizeQuestion(image: "Kill Bill",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: true),
+    QuizeQuestion(image: "The Avengers",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: true),
+    QuizeQuestion(image: "Deadpool",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: true),
+    QuizeQuestion(image: "The Green Knight",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: true),
+    QuizeQuestion(image: "Old",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: false),
+    QuizeQuestion(image: "The Ice Age Adventures of Buck Wild",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: false),
+    QuizeQuestion(image: "Tesla",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: false),
+    QuizeQuestion(image: "Vivarium",
+                  text: "Рейтинг этого фильма больше чем 6?",
+                  correctAnswer: false)
+]
