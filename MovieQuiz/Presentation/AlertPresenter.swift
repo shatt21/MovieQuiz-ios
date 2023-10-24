@@ -14,12 +14,13 @@ protocol AlertPresenter{
 
 final class AlertPresenterImp {
     private weak var viewController: UIViewController?
+    
     init(viewController: UIViewController? = nil) {
         self.viewController = viewController
     }
 }
 
-extension AlertPresenterImp : AlertPresenter {
+extension AlertPresenterImp: AlertPresenter {
         func show(alertModel: AlertModel){
             let alert = UIAlertController(title: alertModel.title,
                                           message: alertModel.message,
