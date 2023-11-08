@@ -5,7 +5,7 @@ final class MovieQuizViewController: UIViewController {
     
     
     
-    // MARK: - Constants
+    // MARK: - Private Properties
     weak var delegate: QuestionFactoryDelegate?
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
@@ -81,7 +81,9 @@ final class MovieQuizViewController: UIViewController {
         imageView.image = step.image
         textView.text = step.question
         counterLabel.text = step.questionNumber
+        
         imageView.layer.borderColor = UIColor.clear.cgColor
+        imageView.layer.cornerRadius = 20
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -113,24 +115,7 @@ final class MovieQuizViewController: UIViewController {
             
         }
     }
-    
-//    private func show(quiz result: QuizResultsViewModel) {
-//        statisticService?.store(correct: correctAnswers, total: questionsAmount)
-//        let alertModel = AlertModel(title: result.title,
-//                                    message: result.text,
-//                                    buttonText: result.buttonText,
-//                                    buttonAction: { [weak self] in
-//            guard let self = self else { return }
-//            self.currentQuestionIndex = 0
-//            self.correctAnswers = 0
-//            self.questionFactory?.requestNextQuestion()
-//        }
-//    )
-//
-//        alertPresenter?.show(alertModel: alertModel)
-//    }
-    
-    
+      
     private func showFinalResults() {
         statisticService?.store(correct: correctAnswers, total: questionsAmount)
         let alertModel = AlertModel(
