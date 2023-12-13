@@ -9,4 +9,6 @@ import Foundation
 
 protocol QuestionFactoryDelegate: AnyObject {
     func didReceiveNextQuestion(_ question: QuizeQuestion?)
+    func didLoadDataFromServer()
+    func didFailToLoadData(with error: Error)
 }

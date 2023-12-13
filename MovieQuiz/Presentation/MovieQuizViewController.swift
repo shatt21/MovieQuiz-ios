@@ -1,6 +1,5 @@
 import UIKit
 
-
 final class MovieQuizViewController: UIViewController {
     
     
@@ -42,20 +41,20 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var noButton: UIButton!
     
     @IBOutlet private var yesButton: UIButton!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        questionFactory = QuestionFactory(delegate: self)
-        
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.requestNextQuestion()
-        
         alertPresenter = AlertPresenterImp(viewController: self)
-        
         statisticService = StatisticServicesImp()
         
+        showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
    
@@ -71,7 +70,7 @@ final class MovieQuizViewController: UIViewController {
     
     private func convert(_ model: QuizeQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
@@ -149,8 +148,36 @@ final class MovieQuizViewController: UIViewController {
         """
         return resultMessage
     }
+    
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+    
+//    private func hideLoadingIndicator() {
+//        activityIndicator.isHidden = false
+//        activityIndicator.startAnimating()
+//    }
+    
+    private func showNetworkError (message: String) {
+        showLoadingIndicator()
+        
+        let alert = AlertModel(
+            title: "Что-то пошло не так(",
+            message:  message,
+            buttonText: "Попробовать еще раз",
+            buttonAction: { [weak self] in guard let self = self else { return }
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                self.questionFactory?.requestNextQuestion()
+        }
+        )
+        
+        alertPresenter?.show(alertModel: alert)
+    }
+    
 }
-
+// MARK: - Extension
 extension MovieQuizViewController: QuestionFactoryDelegate {
     //MARK: - QuestionFactoryDelegate
     
@@ -162,6 +189,15 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
+    }
+    
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
 }
 
