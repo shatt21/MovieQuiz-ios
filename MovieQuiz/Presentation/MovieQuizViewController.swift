@@ -53,6 +53,10 @@ final class MovieQuizViewController: UIViewController {
         alertPresenter = AlertPresenterImp(viewController: self)
         statisticService = StatisticServicesImp()
         
+        textView.text = ""
+        imageView.layer.cornerRadius = 20
+        imageView.backgroundColor = UIColor.clear
+        activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
         questionFactory?.loadData()
     }
@@ -82,7 +86,6 @@ final class MovieQuizViewController: UIViewController {
         counterLabel.text = step.questionNumber
         
         imageView.layer.borderColor = UIColor.clear.cgColor
-        imageView.layer.cornerRadius = 20
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -109,7 +112,7 @@ final class MovieQuizViewController: UIViewController {
             showFinalResults()
         } else {
             currentQuestionIndex += 1
-            
+            showLoadingIndicator()
             questionFactory?.requestNextQuestion()
             
         }
@@ -123,9 +126,11 @@ final class MovieQuizViewController: UIViewController {
             buttonText: "ОК",
             buttonAction: { [weak self] in
             guard let self = self else { return }
+                
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
-                self.questionFactory?.requestNextQuestion()
+                self.showLoadingIndicator()
+                self.questionFactory?.loadData()
         }
     )
         
@@ -150,32 +155,41 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
     
-//    private func hideLoadingIndicator() {
-//        activityIndicator.isHidden = false
-//        activityIndicator.startAnimating()
-//    }
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+    }
     
     private func showNetworkError (message: String) {
-        showLoadingIndicator()
-        
         let alert = AlertModel(
-            title: "Что-то пошло не так(",
+            title: "Что-то пошло не так",
             message:  message,
             buttonText: "Попробовать еще раз",
-            buttonAction: { [weak self] in guard let self = self else { return }
-                self.currentQuestionIndex = 0
-                self.correctAnswers = 0
-                self.questionFactory?.requestNextQuestion()
-        }
+            buttonAction: { [weak self] in 
+                guard let self = self else { return }
+                self.questionFactory?.loadData()
+                self.showLoadingIndicator()
+            }
         )
         
         alertPresenter?.show(alertModel: alert)
     }
     
+    
+    private func showImageError(message: String) {
+        let alert = AlertModel(
+            title: "Что-то пошло не так",
+            message: message,
+            buttonText: "Загрузить другой вопрос",
+            buttonAction: { [weak self] in
+                guard let self = self else { return }
+                self.questionFactory?.requestNextQuestion()
+                self.showLoadingIndicator()
+            }
+        )
+    }
 }
 // MARK: - Extension
 extension MovieQuizViewController: QuestionFactoryDelegate {
