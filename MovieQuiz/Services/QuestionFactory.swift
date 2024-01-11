@@ -47,7 +47,11 @@ class QuestionFactory: QuestionFactoryProtocol {
             do {
                 imageData = try Data(contentsOf: movies.resizedImageURL)
             } catch {
-                print("Failed to load image")
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.didFailToLoadData(with: error)
+                    return
+                }
             }
             
             let rating = Float(movies.rating) ?? 0
@@ -64,14 +68,6 @@ class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
-//    func requestNextQuestion() {
-//        guard let question = question.randomElement() else {
-//            assertionFailure("question is empty")
-//            return
-//        }
-//        
-//        delegate?.didReceiveNextQuestion(question)
-//    }
 }
 
 

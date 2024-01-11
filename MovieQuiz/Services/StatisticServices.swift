@@ -84,7 +84,10 @@ extension StatisticServicesImp: StatisticServices {
     }
     
     var totalAccuracy: Double {
-        Double(correct) / Double(total) * 100
+        if total == 0 {
+            return 0
+        }
+       return Double(correct) / Double(total) * 100
     }
     
     func store(correct: Int, total: Int) {
