@@ -123,10 +123,9 @@ final class MovieQuizViewController: UIViewController {
         let alertModel = AlertModel(
             title: "Игра окончена",
             message: makeResultMessage(),
-            buttonText: "ОК",
-            buttonAction: { [weak self] in
+            buttonText: "Сыграть еще раз",
+            completion: { [weak self] in
             guard let self = self else { return }
-                
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
                 self.showLoadingIndicator()
@@ -138,20 +137,20 @@ final class MovieQuizViewController: UIViewController {
     }
     
     
-    private func makeResultMessage() -> String{
-        guard let statisticService = statisticService, let bestGame = statisticService.bestGame else {
+    private func makeResultMessage() -> String {
+        guard let statisticService = statisticService else {
             assertionFailure("error message")
             return ""
         }
         
-        let resultMessage =
-        """
-                Ваш результат: \(correctAnswers)\\\(questionsAmount)
-                Всего сыграно игр: \(statisticService.gameCount)
-                Лучший результат: \(bestGame.correct)\\\(bestGame.total) (\(bestGame.date.dateTimeString))
-                Средняя точность: \(String(format: "%2.f", statisticService.totalAccuracy))%
+        let resultMessage = """
+        Ваш результат: \(correctAnswers)/\(questionsAmount)
+        Количество сыгранных квизов: \(statisticService.gameCount)
+        Лучший результат: \(statisticService.bestGame.correct)/10 (\(statisticService.bestGame.date.dateTimeString))
+        Cредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
         """
         return resultMessage
+
     }
     
     private func showLoadingIndicator() {
@@ -167,7 +166,7 @@ final class MovieQuizViewController: UIViewController {
             title: "Что-то пошло не так",
             message:  message,
             buttonText: "Попробовать еще раз",
-            buttonAction: { [weak self] in 
+            completion: { [weak self] in 
                 guard let self = self else { return }
                 self.questionFactory?.loadData()
                 self.showLoadingIndicator()
@@ -183,7 +182,7 @@ final class MovieQuizViewController: UIViewController {
             title: "Что-то пошло не так",
             message: message,
             buttonText: "Загрузить другой вопрос",
-            buttonAction: { [weak self] in
+            completion: { [weak self] in
                 guard let self = self else { return }
                 self.questionFactory?.requestNextQuestion()
                 self.showLoadingIndicator()

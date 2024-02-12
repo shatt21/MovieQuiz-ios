@@ -10,7 +10,7 @@ import Foundation
 protocol StatisticServices {
     var totalAccuracy: Double { get }
     var gameCount: Int { get }
-    var bestGame: BestGame? { get }
+    var bestGame: BestGame { get }
     
     func store(correct: Int, total: Int)
 }
@@ -40,6 +40,7 @@ final class StatisticServicesImp {
 
 extension StatisticServicesImp: StatisticServices {
     
+    
     var gameCount: Int {
         get {
             userDefaults.integer(forKey: Keys.gamesCount.rawValue)
@@ -68,17 +69,21 @@ extension StatisticServicesImp: StatisticServices {
     }
 
     
-    var bestGame: BestGame?  {
+    var bestGame: BestGame  {
         get {
             guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue), 
-                  let bestGame = try? decoder.decode(BestGame.self, from: data) else {
-                return nil
+                  let record = try? decoder.decode(BestGame.self, from: data) else {
+                return .init(correct: 0, total: 0, date: Date())
             }
             
-            return bestGame
+            return record
         }
         set {
-            let data = try? encoder.encode(newValue)
+            guard let data = try? encoder.encode(newValue) else {
+                print("Невозможно сохранить результат")
+                return
+            }
+            
             userDefaults.set(data, forKey: Keys.bestGame.rawValue)
         }
     }
@@ -90,20 +95,15 @@ extension StatisticServicesImp: StatisticServices {
        return Double(correct) / Double(total) * 100
     }
     
-    func store(correct: Int, total: Int) {
-        self.correct += correct
-        self.total += total
-        self.gameCount  += 1
-        
-        let date = dateProvider()
-        let currentBestGame = BestGame(correct: correct, total: total, date: date)
-        
-        if let previousBestGame = bestGame {
-            if currentBestGame > previousBestGame {
-                bestGame = currentBestGame
-            }
-        } else {
-                bestGame = currentBestGame
+    func store(correct count: Int, total amount: Int) {
+        self.correct += count
+        self.total += amount
+        self.gameCount += 1
+
+        let game = BestGame(correct: count, total: amount, date: Date())
+
+        if game.isBetterThan(bestGame) {
+            bestGame = game
         }
     }
 }
