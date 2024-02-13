@@ -30,6 +30,7 @@ extension AlertPresenterImp: AlertPresenter {
             result.completion()
         }
         alert.addAction(action)
+        alert.view.accessibilityIdentifier = "Game Result"
         viewController?.present(alert, animated: true)
     }
 }
