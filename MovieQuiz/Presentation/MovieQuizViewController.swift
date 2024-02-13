@@ -1,6 +1,7 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
+    
     
     
     
@@ -88,13 +89,11 @@ final class MovieQuizViewController: UIViewController {
     }
     
     func showLoadingIndicator() {
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
+        activityIndicator?.startAnimating()
     }
     
     func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
-        activityIndicator.stopAnimating()
+        activityIndicator?.stopAnimating()
     }
     
     
