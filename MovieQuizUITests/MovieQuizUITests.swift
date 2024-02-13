@@ -72,7 +72,7 @@ final class MovieQuizUITests: XCTestCase {
         let alert = app.alerts["Game results"]
         
         XCTAssertTrue(alert.exists)
-        XCTAssertTrue(alert.label == "Этот раудн окончен!")
+        XCTAssertTrue(alert.label == "Игра окончена")
         XCTAssertTrue(alert.buttons.firstMatch.label == "Сыграть еще раз")
     }
     
