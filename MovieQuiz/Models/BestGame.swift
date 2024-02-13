@@ -1,0 +1,31 @@
+//
+//  BestGame.swift
+//  MovieQuiz
+//
+//  Created by Паша Шатовкин on 19.10.2023.
+//
+
+import Foundation
+
+struct BestGame: Codable {
+    let correct: Int
+    let total: Int
+    let date: Date
+    
+    func isBetterThan(_ another: BestGame) -> Bool {
+        correct > another.correct
+    }
+}
+
+extension BestGame: Comparable {
+    private var accuracy: Double {
+        guard total != 0 else {
+            return 0
+        }
+        return Double(correct) / Double(total)
+    }
+    
+    static func < (lhs: BestGame, rhs: BestGame) -> Bool {
+        lhs.accuracy < rhs.accuracy
+    }
+}
