@@ -11,28 +11,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     private var statisticService: StatisticServices?
     private var presenter: MovieQuizPresenter!
     
-    
-    
-    // MARK: - IBAction
-    
-    @IBAction private func noButtonClicked(_ sender: UIButton) {
-        self.switchOfButton()
-        presenter.noButtonClicked()
-    }
-    
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        self.switchOfButton()
-        presenter.yesButtonClicked()
-    }
-    
     // MARK: - IBOutlet
     
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textView: UILabel!
     @IBOutlet private var counterLabel: UILabel!
-    
     @IBOutlet private var noButton: UIButton!
-    
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
@@ -52,7 +36,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         self.switchOfButton()
     }
     
-    // MARK: - Private Methods
+    // MARK: - Internal Methods
     
     func showQuestion(quiz step: QuizStepViewModel) {
         imageView.layer.cornerRadius = 20
@@ -100,5 +84,17 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     func switchOfButton() {
         yesButton.isEnabled.toggle()
         noButton.isEnabled.toggle()
+    }
+    
+    // MARK: - IBAction
+    
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        self.switchOfButton()
+        presenter.noButtonClicked()
+    }
+    
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        self.switchOfButton()
+        presenter.yesButtonClicked()
     }
 }

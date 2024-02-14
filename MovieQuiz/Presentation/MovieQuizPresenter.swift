@@ -12,14 +12,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
 
     private var currentQuestionIndex: Int = 0
-    let questionsAmount: Int = 10
+    private let questionsAmount: Int = 10
     private var correctAnswers = 0
     
-    var currentQuestion: QuizeQuestion?
+    private var currentQuestion: QuizeQuestion?
     private var statisticService: StatisticServices?
     private var questionFactory: QuestionFactoryProtocol?
-    
-    weak var viewController: MovieQuizViewController?
+    private weak var viewController: MovieQuizViewController?
     
     init(viewController: MovieQuizViewController) {
         self.viewController = viewController
@@ -47,7 +46,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     
-    func didAnswer(isCorrectAnswer: Bool) {
+    private func didAnswer(isCorrectAnswer: Bool) {
         guard let currentQuestion = currentQuestion else { return }
         let givenAnswer = isCorrectAnswer
         if givenAnswer == currentQuestion.correctAnswer {
@@ -106,15 +105,15 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    func isLastQuestion() -> Bool {
+    private func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
     
-    func resetQuestionIndex() {
+    private func resetQuestionIndex() {
         currentQuestionIndex = 0
     }
     
-    func switchToNextQuestion() {
+    private func switchToNextQuestion() {
         currentQuestionIndex += 1
     }
     
@@ -125,7 +124,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
 
     }
     
-    func proccedWithAnswer(isCorrect: Bool) {
+    private func proccedWithAnswer(isCorrect: Bool) {
         viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
@@ -134,7 +133,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    func proccedToNextQuestionOrResult() {
+    private func proccedToNextQuestionOrResult() {
         if isLastQuestion(){
             statisticService?.store(correct: correctAnswers, total: questionsAmount)
             let viewModel = QuizResultsViewModel(
